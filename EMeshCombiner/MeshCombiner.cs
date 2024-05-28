@@ -6,7 +6,7 @@ namespace Editor.EMeshCombiner
 {
     public class MeshCombiner
     {
-        public GameObject CombineMeshes(GameObject[] objects)
+        public GameObject CombineMeshes(GameObject[] objects, string savePath, string meshName)
         {
             List<MeshFilter> meshFilters = new List<MeshFilter>();
             List<Material> materials = new List<Material>();
@@ -66,7 +66,11 @@ namespace Editor.EMeshCombiner
             Mesh combinedMesh = new Mesh();
             combinedMesh.CombineMeshes(combineInstances.ToArray(), false, false);
 
-            GameObject mergedObject = new GameObject("MergedMesh");
+            string uniquePath = AssetDatabase.GenerateUniqueAssetPath($"{savePath}/{meshName}.asset");
+            AssetDatabase.CreateAsset(combinedMesh, uniquePath);
+            AssetDatabase.SaveAssets();
+
+            GameObject mergedObject = new GameObject(meshName);
             MeshFilter meshFilterComponent = mergedObject.AddComponent<MeshFilter>();
             MeshRenderer meshRendererComponent = mergedObject.AddComponent<MeshRenderer>();
 

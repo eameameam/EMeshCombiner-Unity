@@ -6,7 +6,9 @@ namespace Editor.EMeshCombiner
 {
     public class MeshMergerWindow : EditorWindow
     {
-        private readonly List<GameObject> _objectsToMerge = new List<GameObject>();
+        private List<GameObject> _objectsToMerge = new List<GameObject>();
+        private string _savePath = "Assets/MergedMeshes";
+        private string _meshName = "MergedMesh";
 
         [MenuItem("Escripts/EMeshMerger")]
         public static void ShowWindow()
@@ -56,7 +58,7 @@ namespace Editor.EMeshCombiner
                     }
                     break;
             }
-
+            
             GUILayout.Space(10);
 
             for (int i = 0; i < _objectsToMerge.Count; i++)
@@ -73,11 +75,36 @@ namespace Editor.EMeshCombiner
 
             GUILayout.Space(10);
 
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Select Path", EditorStyles.helpBox);
+
+            if (GUILayout.Button("Browse", GUILayout.Width(70)))
+            {
+                string selectedPath = EditorUtility.SaveFolderPanel("Select Save Folder", _savePath, "");
+                if (!string.IsNullOrEmpty(selectedPath))
+                {
+                    _savePath = "Assets" + selectedPath.Substring(Application.dataPath.Length);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(_savePath, EditorStyles.miniLabel);
+            EditorGUILayout.EndHorizontal();
+
+            GUILayout.Space(10);
+
+            _meshName = EditorGUILayout.TextField("Mesh Name", _meshName);
+
+            GUILayout.Space(10);
+
+            GUI.enabled = !string.IsNullOrEmpty(_savePath) && !string.IsNullOrEmpty(_meshName);
             if (GUILayout.Button("Merge Meshes"))
             {
                 Undo.RecordObject(this, "Merge Meshes");
                 MergeMeshes();
             }
+            GUI.enabled = true;
         }
 
         private void MergeMeshes()
@@ -89,7 +116,7 @@ namespace Editor.EMeshCombiner
             }
 
             MeshCombiner combiner = new MeshCombiner();
-            GameObject mergedObject = combiner.CombineMeshes(_objectsToMerge.ToArray());
+            GameObject mergedObject = combiner.CombineMeshes(_objectsToMerge.ToArray(), _savePath, _meshName);
 
             if (mergedObject != null)
             {
