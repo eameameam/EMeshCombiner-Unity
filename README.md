@@ -5,16 +5,9 @@
 
 ![EMeshMerger Window](/EMeshCombiner.png)
 
-## Installation
-
-1. Copy `MeshMergerWindow.cs`, `MeshCombiner.cs`, and `TransformUtility.cs` into your Unity project's Editor folder.
-
 ## Usage
 
 Access the editor window through Unity's menu by navigating to `Escripts > EMeshMerger`.
-
-## Mesh Merger Management
-Combine selected meshes and their materials into one mesh. This tool simplifies the process of mesh optimization by merging multiple GameObjects' meshes.
 
 ## How to Use
 
